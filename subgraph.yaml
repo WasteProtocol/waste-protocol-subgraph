@@ -20,6 +20,9 @@ dataSources:
     - TradeSettled
     - TradeSubmitted
     - Trade
+    - TradeDay
+    - TradeHour
+    - TradeTotal
     abis:
     - name: WasteSettlement
       file: ./abis/WasteSettlement.json

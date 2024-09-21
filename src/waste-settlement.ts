@@ -1,17 +1,22 @@
+import { BigInt } from "@graphprotocol/graph-ts"
 import {
   OwnershipTransferred as OwnershipTransferredEvent,
   TradeApproved as TradeApprovedEvent,
   TradeRejected as TradeRejectedEvent,
   TradeSettled as TradeSettledEvent,
-  TradeSubmitted as TradeSubmittedEvent
+  TradeSubmitted as TradeSubmittedEvent,
+  WasteSettlement
 } from "../generated/WasteSettlement/WasteSettlement"
 import {
   OwnershipTransferred,
   Trade,
   TradeApproved,
+  TradeDay,
+  TradeHour,
   TradeRejected,
   TradeSettled,
-  TradeSubmitted
+  TradeSubmitted,
+  TradeTotal,
 } from "../generated/schema"
 
 export function handleOwnershipTransferred(
@@ -28,6 +33,65 @@ export function handleOwnershipTransferred(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+}
+
+export function collectStat(event: TradeSettledEvent): void {
+  // TradeContract
+  // const tradeContract = WasteSettlement.bind(event.address)
+
+  // get TradeItemTotal entity if not exist create new one
+  let tradeItemTotal = TradeTotal.load("1")
+  if (tradeItemTotal === null) {
+    tradeItemTotal = new TradeTotal("1")
+    tradeItemTotal.tradeCount = BigInt.fromI32(0)
+    tradeItemTotal.carbonEmissionCount = BigInt.fromI32(1)
+    tradeItemTotal.usdcCount = BigInt.fromI32(0)
+  }
+
+  tradeItemTotal.tradeCount = tradeItemTotal.tradeCount!.plus(BigInt.fromI32(1));
+  tradeItemTotal.carbonEmissionCount = tradeItemTotal.carbonEmissionCount!.plus(event.params.totalEmission);
+  tradeItemTotal.usdcCount = tradeItemTotal.usdcCount!.plus(event.params.usdcAmount);
+  tradeItemTotal.save()
+
+  // get month and year from block timestamp
+  let timestamp = event.block.timestamp.toI32();
+  let dayID = timestamp / 86400;
+  let dayStartTimestamp = dayID * 86400;
+
+  // get TradeItemTotal entity by month and year if not exist create new one
+  let entityKey = `${dayID.toString()}`;
+  let tradeDay = TradeDay.load(entityKey)
+  if (tradeDay === null) {
+    tradeDay = new TradeDay(entityKey)
+    tradeDay.tradeCount = BigInt.fromI32(0)
+    tradeDay.carbonEmissionCount = BigInt.fromI32(0)
+    tradeDay.usdcCount = BigInt.fromI32(0)
+  }
+
+  tradeDay.tradeCount = tradeDay.tradeCount!.plus(BigInt.fromI32(1));
+  tradeDay.carbonEmissionCount = tradeDay.carbonEmissionCount!.plus(event.params.totalEmission);
+  tradeDay.usdcCount = tradeDay.usdcCount!.plus(event.params.usdcAmount);
+
+  tradeDay.save()
+
+  // stat for TradeHour
+  let hourIndex = timestamp / 3600;
+  let hourStartUnix = hourIndex * 3600;
+  let hourKey = `${hourIndex.toString()}`;
+  let tradeHour = TradeHour.load(hourKey)
+  if (tradeHour === null) {
+    tradeHour = new TradeHour(hourKey)
+    tradeHour.tradeCount = BigInt.fromI32(0)
+    tradeHour.carbonEmissionCount = BigInt.fromI32(0)
+    tradeHour.usdcCount = BigInt.fromI32(0)
+  }
+
+  tradeHour.tradeCount = tradeHour.tradeCount!.plus(BigInt.fromI32(1));
+  tradeHour.carbonEmissionCount = tradeHour.carbonEmissionCount!.plus(event.params.totalEmission);
+  tradeHour.usdcCount = tradeHour.usdcCount!.plus(event.params.usdcAmount);
+
+  tradeHour.save()
+
 }
 
 export function handleTradeApproved(event: TradeApprovedEvent): void {
@@ -98,6 +162,8 @@ export function handleTradeSettled(event: TradeSettledEvent): void {
   trade.totalEmission = event.params.totalEmission
   trade.status = "Settled"
   trade.save()
+
+  collectStat(event)
 }
 
 export function handleTradeSubmitted(event: TradeSubmittedEvent): void {

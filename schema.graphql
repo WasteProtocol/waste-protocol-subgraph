@@ -60,3 +60,27 @@ type Trade @entity{
   submitedAt: BigInt
   approvedAt: BigInt
 }
+
+type TradeDay @entity{
+  id: String!
+  tradeCount: BigInt # uint256
+  carbonEmissionCount: BigInt # uint256
+  usdcCount: BigInt # uint256
+  date: Int
+}
+
+type TradeHour @entity{
+  id: String!
+  tradeCount: BigInt # uint256
+  carbonEmissionCount: BigInt # uint256
+  usdcCount: BigInt # uint256
+  hourStartUnix: Int
+}
+
+type TradeTotal @entity{
+  id: String!
+  tradeCount: BigInt # uint256
+  carbonEmissionCount: BigInt # uint256
+  usdcCount: BigInt # uint256
+}
+
