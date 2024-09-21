@@ -66,7 +66,7 @@ type TradeDay @entity{
   tradeCount: BigInt # uint256
   carbonEmissionCount: BigInt # uint256
   usdcCount: BigInt # uint256
-  date: Int
+  date: BigInt
 }
 
 type TradeHour @entity{
@@ -74,7 +74,7 @@ type TradeHour @entity{
   tradeCount: BigInt # uint256
   carbonEmissionCount: BigInt # uint256
   usdcCount: BigInt # uint256
-  hourStartUnix: Int
+  hourStartUnix: BigInt
 }
 
 type TradeTotal @entity{

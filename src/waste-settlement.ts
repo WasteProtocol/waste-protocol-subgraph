@@ -66,6 +66,7 @@ export function collectStat(event: TradeSettledEvent): void {
     tradeDay.tradeCount = BigInt.fromI32(0)
     tradeDay.carbonEmissionCount = BigInt.fromI32(0)
     tradeDay.usdcCount = BigInt.fromI32(0)
+    tradeDay.date = BigInt.fromI32(dayStartTimestamp)
   }
 
   tradeDay.tradeCount = tradeDay.tradeCount!.plus(BigInt.fromI32(1));
@@ -84,6 +85,7 @@ export function collectStat(event: TradeSettledEvent): void {
     tradeHour.tradeCount = BigInt.fromI32(0)
     tradeHour.carbonEmissionCount = BigInt.fromI32(0)
     tradeHour.usdcCount = BigInt.fromI32(0)
+    tradeHour.hourStartUnix = BigInt.fromI32(hourStartUnix)
   }
 
   tradeHour.tradeCount = tradeHour.tradeCount!.plus(BigInt.fromI32(1));
