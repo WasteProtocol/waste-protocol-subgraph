@@ -2,35 +2,36 @@ specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: WasteSettlement
-    network: sepolia
-    source:
-      address: "0xdCE2395d97A307c6179f7ee8A7b843c768BE4221"
-      abi: WasteSettlement
-      startBlock: 6733045
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - OwnershipTransferred
-        - TradeApproved
-        - TradeRejected
-        - TradeSettled
-        - TradeSubmitted
-      abis:
-        - name: WasteSettlement
-          file: ./abis/WasteSettlement.json
-      eventHandlers:
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: TradeApproved(uint256,indexed address)
-          handler: handleTradeApproved
-        - event: TradeRejected(uint256,indexed address)
-          handler: handleTradeRejected
-        - event: TradeSettled(uint256,indexed address,uint256,uint256,uint256)
-          handler: handleTradeSettled
-        - event: TradeSubmitted(uint256,indexed address)
-          handler: handleTradeSubmitted
-      file: ./src/waste-settlement.ts
+- kind: ethereum
+  name: WasteSettlement
+  network: sepolia
+  source:
+    address: "0xdCE2395d97A307c6179f7ee8A7b843c768BE4221"
+    abi: WasteSettlement
+    startBlock: 6733045
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    entities:
+    - OwnershipTransferred
+    - TradeApproved
+    - TradeRejected
+    - TradeSettled
+    - TradeSubmitted
+    - Trade
+    abis:
+    - name: WasteSettlement
+      file: ./abis/WasteSettlement.json
+    eventHandlers:
+    - event: OwnershipTransferred(indexed address,indexed address)
+      handler: handleOwnershipTransferred
+    - event: TradeApproved(uint256,indexed address)
+      handler: handleTradeApproved
+    - event: TradeRejected(uint256,indexed address)
+      handler: handleTradeRejected
+    - event: TradeSettled(uint256,indexed address,uint256,uint256,uint256)
+      handler: handleTradeSettled
+    - event: TradeSubmitted(uint256,indexed address)
+      handler: handleTradeSubmitted
+    file: ./src/waste-settlement.ts

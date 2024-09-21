@@ -7,6 +7,7 @@ import {
 } from "../generated/WasteSettlement/WasteSettlement"
 import {
   OwnershipTransferred,
+  Trade,
   TradeApproved,
   TradeRejected,
   TradeSettled,
@@ -41,6 +42,18 @@ export function handleTradeApproved(event: TradeApprovedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  // get trade entity by tradeId if not exist create new one
+  let trade = Trade.load(event.params.tradeId.toString())
+  if (trade == null) {
+    trade = new Trade(event.params.tradeId.toString())
+  }
+
+  // update trade entity
+  trade.socialNode = event.params.socialNode
+  trade.approvedAt = event.block.timestamp
+  trade.status = "Approved"
+  trade.save()
 }
 
 export function handleTradeRejected(event: TradeRejectedEvent): void {
@@ -72,6 +85,19 @@ export function handleTradeSettled(event: TradeSettledEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  // get trade entity by tradeId if not exist create new one
+  let trade = Trade.load(event.params.tradeId.toString())
+  if (trade == null) {
+    trade = new Trade(event.params.tradeId.toString())
+  }
+
+  // update trade entity
+  trade.wasteTokenAmount = event.params.wasteTokenAmount
+  trade.usdcAmount = event.params.usdcAmount
+  trade.totalEmission = event.params.totalEmission
+  trade.status = "Settled"
+  trade.save()
 }
 
 export function handleTradeSubmitted(event: TradeSubmittedEvent): void {
@@ -86,4 +112,18 @@ export function handleTradeSubmitted(event: TradeSubmittedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  // get trade entity by tradeId if not exist create new one
+  let trade = Trade.load(event.params.tradeId.toString())
+  if (trade == null) {
+    trade = new Trade(event.params.tradeId.toString())
+  }
+
+  // update trade entity
+  trade.blockNumber = event.block.number
+  trade.blockTimestamp = event.block.timestamp
+  trade.user = event.params.user
+  trade.status = "Pending"
+  trade.submitedAt = event.block.timestamp
+  trade.save()
 }

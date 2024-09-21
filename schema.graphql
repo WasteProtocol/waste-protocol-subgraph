@@ -45,3 +45,18 @@ type TradeSubmitted @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+type Trade @entity{
+  id: String!
+  socialNode: Bytes # address
+  user: Bytes # address
+  wasteTokenAmount: BigInt # uint256
+  usdcAmount: BigInt # uint256
+  totalEmission: BigInt # uint256
+  status: String
+  blockNumber: BigInt
+  blockTimestamp: BigInt
+  transactionHash: Bytes
+  submitedAt: BigInt
+  approvedAt: BigInt
+}
