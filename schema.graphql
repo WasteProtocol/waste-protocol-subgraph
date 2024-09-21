@@ -1,0 +1,47 @@
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TradeApproved @entity(immutable: true) {
+  id: Bytes!
+  tradeId: BigInt! # uint256
+  socialNode: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TradeRejected @entity(immutable: true) {
+  id: Bytes!
+  tradeId: BigInt! # uint256
+  socialNode: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TradeSettled @entity(immutable: true) {
+  id: Bytes!
+  tradeId: BigInt! # uint256
+  user: Bytes! # address
+  wasteTokenAmount: BigInt! # uint256
+  usdcAmount: BigInt! # uint256
+  totalEmission: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TradeSubmitted @entity(immutable: true) {
+  id: Bytes!
+  tradeId: BigInt! # uint256
+  user: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

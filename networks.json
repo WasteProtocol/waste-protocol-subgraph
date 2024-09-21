@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "WasteSettlement": {
+      "address": "0xdCE2395d97A307c6179f7ee8A7b843c768BE4221",
+      "startBlock": 6733045
+    }
+  }
+}
